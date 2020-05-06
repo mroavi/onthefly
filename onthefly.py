@@ -4,14 +4,13 @@
 # and then injected back with uinput.
 
 # You need to install evdev with a package manager or pip3.
-import evdev  # (sudo pip3 install evdev)
-from evdev import ecodes as e
+from evdev import UInput, ecodes, InputDevice, list_devices
 import click
 
 @click.command()
 @click.argument("input_file", default="/home/mroavi/Desktop/input.jl")
 def onthefly(input_file):
-    
+
     file_characters = [] # used to store all characters in the input file
     current_char_idx = 0 # indicates the next character to be emulated
 
@@ -48,14 +47,14 @@ def onthefly(input_file):
     # Define the keys that can be used to indicate when to type the next character
     WRITE_NEXT_CHAR_KEYS = [
         # Let's intercerpt the characters asdfjkl;
-        e.KEY_A,
-        e.KEY_S,
-        e.KEY_D,
-        e.KEY_F,
-        e.KEY_J,
-        e.KEY_K,
-        e.KEY_L,
-        e.KEY_SEMICOLON,
+        ecodes.KEY_A,
+        ecodes.KEY_S,
+        ecodes.KEY_D,
+        ecodes.KEY_F,
+        ecodes.KEY_J,
+        ecodes.KEY_K,
+        ecodes.KEY_L,
+        ecodes.KEY_SEMICOLON,
     ]
     # The names can be found running evtest from the terminal:
     #    > sudo python -m evdev.evtest
@@ -63,94 +62,94 @@ def onthefly(input_file):
     # The keyboard name we will intercept the events for. Obtainable with evtest.
     MATCH = 'Logitech K330' # mrv
     # Find all input devices.
-    devices = [evdev.InputDevice(fn) for fn in evdev.list_devices()]
+    devices = [InputDevice(fn) for fn in list_devices()]
     # Limit the list to those containing MATCH and pick the first one.
     kbd = [d for d in devices if MATCH in d.name][0]
 
     kbd.grab() # Grab, i.e. prevent the keyboard from emitting original events.
 
     # Create a new keyboard mimicking the original one.
-    with evdev.UInput.from_device(kbd, name='onthefly') as ui:
-        for ev in kbd.read_loop():  # Read events from original keyboard.
-            if ev.type == e.EV_KEY:  # Process key events.
-                if ev.code == e.KEY_PAUSE and ev.value == 1 \
+    with UInput.from_device(kbd, name='onthefly') as ui:
+        for event in kbd.read_loop():  # Read events from original keyboard.
+            if event.type == ecodes.EV_KEY:  # Process key events.
+                if event.code == ecodes.KEY_PAUSE and event.value == 1 \
                         or current_char_idx == len(file_characters):
                     # Exit on pressing PAUSE or when all characters have been written.
                     kbd.ungrab() # mrv
                     break
 
-                elif ev.code == e.KEY_BACKSPACE and ev.value ==1:
+                elif event.code == ecodes.KEY_BACKSPACE and event.value ==1:
                     # Decrement counter
                     current_char_idx -= 1
                     # Passthrough key event unmodified
-                    ui.write(e.EV_KEY, ev.code, 1)
-                    ui.write(e.EV_KEY, ev.code, 0)
+                    ui.write(ecodes.EV_KEY, event.code, 1)
+                    ui.write(ecodes.EV_KEY, event.code, 0)
                     ui.syn()
 
                 # Write next char when:
                 #   - current key pressed is in the set of permitted keys
                 #   - Control key is not pressed
                 #   - current action is a press and not a release
-                elif ev.code in WRITE_NEXT_CHAR_KEYS \
-                        and e.KEY_LEFTCTRL not in kbd.active_keys() \
-                        and ev.value == 1:
+                elif event.code in WRITE_NEXT_CHAR_KEYS \
+                        and ecodes.KEY_LEFTCTRL not in kbd.active_keys() \
+                        and event.value == 1:
                     # Check if we need to press shift
                     if file_characters[current_char_idx] in ascii2keycode:
                         # No, we don't. Lookup the key we want to press/release
                         remapped_code = ascii2keycode[file_characters[current_char_idx]]
-                        ui.write(e.EV_KEY, remapped_code, 1)
+                        ui.write(ecodes.EV_KEY, remapped_code, 1)
                         ui.syn()
-                        ui.write(e.EV_KEY, remapped_code, 0)
+                        ui.write(ecodes.EV_KEY, remapped_code, 0)
                         ui.syn()
                     elif file_characters[current_char_idx] in shift_ascii2keycode:
                         # Yes, we do. Lookup the key we want to press/release
                         remapped_code = shift_ascii2keycode[file_characters[current_char_idx]]
-                        ui.write(e.EV_KEY, e.KEY_LEFTSHIFT, 1) # press shift
+                        ui.write(ecodes.EV_KEY, ecodes.KEY_LEFTSHIFT, 1) # press shift
                         ui.syn()
-                        ui.write(e.EV_KEY, remapped_code, 1)
+                        ui.write(ecodes.EV_KEY, remapped_code, 1)
                         ui.syn()
-                        ui.write(e.EV_KEY, remapped_code, 0)
+                        ui.write(ecodes.EV_KEY, remapped_code, 0)
                         ui.syn()
-                        ui.write(e.EV_KEY, e.KEY_LEFTSHIFT, 0) # release shift
+                        ui.write(ecodes.EV_KEY, ecodes.KEY_LEFTSHIFT, 0) # release shift
                         ui.syn()
                     else:
                         # The character is not in either dictionary, then it must be a unicode
                         # Press Control+Shift+U
-                        ui.write(e.EV_KEY, e.KEY_LEFTCTRL, 1)
+                        ui.write(ecodes.EV_KEY, ecodes.KEY_LEFTCTRL, 1)
                         ui.syn()
-                        ui.write(e.EV_KEY, e.KEY_LEFTSHIFT, 1)
+                        ui.write(ecodes.EV_KEY, ecodes.KEY_LEFTSHIFT, 1)
                         ui.syn()
-                        ui.write(e.EV_KEY, e.KEY_U, 1)
+                        ui.write(ecodes.EV_KEY, ecodes.KEY_U, 1)
                         ui.syn()
-                        ui.write(e.EV_KEY, e.KEY_U, 0)
+                        ui.write(ecodes.EV_KEY, ecodes.KEY_U, 0)
                         ui.syn()
-                        ui.write(e.EV_KEY, e.KEY_LEFTSHIFT, 0)
+                        ui.write(ecodes.EV_KEY, ecodes.KEY_LEFTSHIFT, 0)
                         ui.syn()
-                        ui.write(e.EV_KEY, e.KEY_LEFTCTRL, 0)
+                        ui.write(ecodes.EV_KEY, ecodes.KEY_LEFTCTRL, 0)
                         ui.syn()
 
                         # Write each hex digit
                         for hex_digit in '%X' % ord(file_characters[current_char_idx]):
-                            keycode = getattr(e, 'KEY_%s' % hex_digit)
-                            ui.write(e.EV_KEY, keycode, 1)
+                            keycode = getattr(ecodes, 'KEY_%s' % hex_digit)
+                            ui.write(ecodes.EV_KEY, keycode, 1)
                             ui.syn()
-                            ui.write(e.EV_KEY, keycode, 0)
+                            ui.write(ecodes.EV_KEY, keycode, 0)
                             ui.syn()
 
                         # Press Enter
-                        ui.write(e.EV_KEY, e.KEY_ENTER, 1)
-                        ui.write(e.EV_KEY, e.KEY_ENTER, 0)
+                        ui.write(ecodes.EV_KEY, ecodes.KEY_ENTER, 1)
+                        ui.write(ecodes.EV_KEY, ecodes.KEY_ENTER, 0)
                         ui.syn()
 
                     # Increment counter
                     current_char_idx += 1
                 else:
                     # Passthrough other key events unmodified.
-                    ui.write(e.EV_KEY, ev.code, ev.value)
+                    ui.write(ecodes.EV_KEY, event.code, event.value)
                     ui.syn()
             else:
                 # Passthrough other events unmodified (e.g. SYNs).
-                ui.write(ev.type, ev.code, ev.value)
+                ui.write(event.type, event.code, event.value)
                 ui.syn()
 
 if __name__ == '__main__':
