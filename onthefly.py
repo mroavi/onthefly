@@ -64,18 +64,18 @@ def onthefly(input_file):
     # Find all input devices.
     devices = [InputDevice(fn) for fn in list_devices()]
     # Limit the list to those containing MATCH and pick the first one.
-    kbd = [d for d in devices if MATCH in d.name][0]
+    dev = [d for d in devices if MATCH in d.name][0]
 
-    kbd.grab() # Grab, i.e. prevent the keyboard from emitting original events.
+    dev.grab() # Grab, i.e. prevent the keyboard from emitting original events.
 
     # Create a new keyboard mimicking the original one.
-    with UInput.from_device(kbd, name='onthefly') as ui:
-        for event in kbd.read_loop():  # Read events from original keyboard.
+    with UInput.from_device(dev, name='onthefly') as ui:
+        for event in dev.read_loop():  # Read events from original keyboard.
             if event.type == ecodes.EV_KEY:  # Process key events.
                 if event.code == ecodes.KEY_PAUSE and event.value == 1 \
                         or current_char_idx == len(file_characters):
                     # Exit on pressing PAUSE or when all characters have been written.
-                    kbd.ungrab() # mrv
+                    dev.ungrab() # mrv
                     break
 
                 elif event.code == ecodes.KEY_BACKSPACE and event.value ==1:
@@ -91,7 +91,7 @@ def onthefly(input_file):
                 #   - Control key is not pressed
                 #   - current action is a press and not a release
                 elif event.code in WRITE_NEXT_CHAR_KEYS \
-                        and ecodes.KEY_LEFTCTRL not in kbd.active_keys() \
+                        and ecodes.KEY_LEFTCTRL not in dev.active_keys() \
                         and event.value == 1:
                     # Check if we need to press shift
                     if file_characters[current_char_idx] in ascii2keycode:
