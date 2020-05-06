@@ -7,7 +7,7 @@
 import evdev  # (sudo pip3 install evdev)
 from evdev import ecodes as e
 
-input_file = "./input.jl"
+input_file = "/home/mroavi/Desktop/input.jl"
 file_characters = [] # used to store all characters in the input file
 current_char_idx = 0 # indicates the next character to be emulated
 
