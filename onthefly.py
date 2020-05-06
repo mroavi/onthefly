@@ -4,17 +4,6 @@
 # The events (key presses releases and repeats), are captured with evdev,
 # and then injected back with uinput.
 
-# This approach should work in X, Wayland, anywhere!
-
-# Also it is not limited to keyboards, may be adapted to any input devices.
-
-# The program should be easily portable to other languages or extendable to
-# run really any code in 'macros', e.g., fetching and typing current weather.
-
-# The ones eager to do it in C can take a look at (overengineered) caps2esc:
-# https://github.com/oblitum/caps2esc
-
-
 # You need to install evdev with a package manager or pip3.
 import evdev  # (sudo pip3 install evdev)
 from evdev import ecodes as e
