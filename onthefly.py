@@ -6,6 +6,10 @@
 # You need to install evdev with a package manager or pip3.
 from evdev import UInput, ecodes, InputDevice, list_devices
 import click
+import time
+
+# Give time for packages to initialize properly
+time.sleep(2)
 
 @click.command()
 @click.argument("input_file", default="/home/mroavi/Desktop/input.jl")
