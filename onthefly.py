@@ -1,6 +1,5 @@
 #!/usr/bin/python3
 
-# This is an example Python program for Linux that remaps a keyboard.
 # The events (key presses releases and repeats), are captured with evdev,
 # and then injected back with uinput.
 
