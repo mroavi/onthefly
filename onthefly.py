@@ -8,8 +8,10 @@ import evdev  # (sudo pip3 install evdev)
 from evdev import ecodes as e
 import click
 
-def main():
-    input_file = "/home/mroavi/Desktop/input.jl"
+@click.command()
+@click.argument("input_file", default="/home/mroavi/Desktop/input.jl")
+def onthefly(input_file):
+    
     file_characters = [] # used to store all characters in the input file
     current_char_idx = 0 # indicates the next character to be emulated
 
@@ -43,7 +45,7 @@ def main():
         for c in read_next_character(f):
             file_characters.append(c)
 
-# Define the keys that can be used to indicate when to type the next character
+    # Define the keys that can be used to indicate when to type the next character
     WRITE_NEXT_CHAR_KEYS = [
         # Let's intercerpt the characters asdfjkl;
         e.KEY_A,
@@ -55,19 +57,19 @@ def main():
         e.KEY_L,
         e.KEY_SEMICOLON,
     ]
-# The names can be found running evtest from the terminal:
-#    > sudo python -m evdev.evtest
+    # The names can be found running evtest from the terminal:
+    #    > sudo python -m evdev.evtest
 
-# The keyboard name we will intercept the events for. Obtainable with evtest.
+    # The keyboard name we will intercept the events for. Obtainable with evtest.
     MATCH = 'Logitech K330' # mrv
-# Find all input devices.
+    # Find all input devices.
     devices = [evdev.InputDevice(fn) for fn in evdev.list_devices()]
-# Limit the list to those containing MATCH and pick the first one.
+    # Limit the list to those containing MATCH and pick the first one.
     kbd = [d for d in devices if MATCH in d.name][0]
 
     kbd.grab() # Grab, i.e. prevent the keyboard from emitting original events.
 
-# Create a new keyboard mimicking the original one.
+    # Create a new keyboard mimicking the original one.
     with evdev.UInput.from_device(kbd, name='onthefly') as ui:
         for ev in kbd.read_loop():  # Read events from original keyboard.
             if ev.type == e.EV_KEY:  # Process key events.
@@ -152,7 +154,7 @@ def main():
                 ui.syn()
 
 if __name__ == '__main__':
-    main()
+    onthefly()
 
 # Convert the scancode into a ASCII code
 # https://stackoverflow.com/questions/19732978/how-can-i-get-a-string-from-hid-device-in-python-with-evdev
