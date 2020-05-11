@@ -3,6 +3,9 @@
 # The events (key presses releases and repeats), are captured with evdev,
 # and then injected back with uinput.
 
+# To bundle an executable run:
+#   pyinstaller -F onthefly.py
+
 # You need to install evdev with a package manager or pip3.
 from evdev import UInput, ecodes, InputDevice, list_devices
 import click
