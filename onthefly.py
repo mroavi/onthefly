@@ -9,7 +9,7 @@ import click
 import time
 
 # Give time for packages to initialize properly
-time.sleep(2)
+time.sleep(0.1)
 
 @click.command()
 @click.argument("input_file", default="/home/mroavi/Desktop/input.jl")
