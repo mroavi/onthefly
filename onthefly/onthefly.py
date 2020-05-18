@@ -17,7 +17,7 @@ time.sleep(0.1)
 @click.command()
 @click.argument("input_file", default="/home/mroavi/Desktop/input.jl")
 def onthefly(input_file):
-
+    """Code like a god on-the-fly"""
     file_characters = [] # used to store all characters in the input file
     current_char_idx = 0 # indicates the next character to be emulated
 
