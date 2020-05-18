@@ -1,2 +1,2 @@
 # onthefly
-Code like a god on-the-fly.
+Code like a *god on-the-fly*.
