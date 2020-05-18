@@ -10,13 +10,17 @@
 from evdev import UInput, ecodes, InputDevice, list_devices
 import click
 import time
+import sys
 
 # Give time for packages to initialize properly
-time.sleep(0.1)
+time.sleep(0.2)
+
+def test():
+    print("This is a test")
 
 @click.command()
 @click.argument("input_file", default="/home/mroavi/Desktop/input.jl")
-def onthefly(input_file):
+def main(input_file):
     """Code like a god on-the-fly"""
     file_characters = [] # used to store all characters in the input file
     current_char_idx = 0 # indicates the next character to be emulated
@@ -68,10 +72,14 @@ def onthefly(input_file):
 
     # The keyboard name we will intercept the events for. Obtainable with evtest.
     MATCH = 'Logitech K330' # mrv
-    # Find all input devices.
-    devices = [InputDevice(fn) for fn in list_devices()]
-    # Limit the list to those containing MATCH and pick the first one.
-    dev = [d for d in devices if MATCH in d.name][0]
+    try:
+        # Find all input devices.
+        devices = [InputDevice(fn) for fn in list_devices()]
+        # Limit the list to those containing MATCH and pick the first one.
+        dev = [d for d in devices if MATCH in d.name][0]
+    except:
+        print("An exception occurred. Verify that you are running this program in sudo mode.")
+        sys.exit()
 
     dev.grab() # Grab, i.e. prevent the keyboard from emitting original events.
 
@@ -160,7 +168,7 @@ def onthefly(input_file):
                 ui.syn()
 
 if __name__ == '__main__':
-    onthefly()
+    sys.exit(main())  # pragma: no cover
 
 # Convert the scancode into a ASCII code
 # https://stackoverflow.com/questions/19732978/how-can-i-get-a-string-from-hid-device-in-python-with-evdev
