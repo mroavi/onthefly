@@ -2,6 +2,7 @@
 onthefly
 ========
 
+
 .. image:: https://img.shields.io/pypi/v/onthefly.svg
         :target: https://pypi.python.org/pypi/onthefly
 
@@ -15,7 +16,7 @@ onthefly
 
 
 
-Code like a god *on-the-fly*
+Code like a god on-the-fly
 
 
 * Free software: MIT license
