@@ -5,13 +5,14 @@ onthefly
 .. image:: https://img.shields.io/pypi/v/onthefly.svg
         :target: https://pypi.python.org/pypi/onthefly
 
-onthefly allows you to emulate typing the contents of an input file by wildly pressing the *asdf jkl;* keys of your keyboard.
+onthefly allows you to emulate typing the contents of an input file by wildly pressing the *asdf jkl;* keys of your keyboard. Great for live coding presentations.
 
 
 Features
 --------
 
 * Unicode support
+* Works with any text editor
 
 
 Installation
@@ -64,6 +65,7 @@ The keyboard name is remembered so you do not have to re-enter it in future invo
 
    $ sudo onthefly /path/to/file
 
+Type the Pause/Break key to quit the program at any moment. Supports using the Backspace key to erase characters without going out of sync with respect to the input file.
 
 License
 -------
