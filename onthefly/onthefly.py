@@ -97,7 +97,8 @@ def onthefly(input_file, keyboard_match_string):
 
     dev = find_keyboard(keyboard_match_string)
     if not dev:
-        print('No keyboard found') # TODO: improve message. "Keyboard not found for match string ... "
+        print("""Error: No keyboard found.
+Use `sudo python -m evdev.evtest` to find the name of your keyboard.""")
         sys.exit()
 
     file_characters = read_input_file(input_file) # read all characters in the input file

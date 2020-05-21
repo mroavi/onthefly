@@ -2,24 +2,10 @@
 onthefly
 ========
 
-
 .. image:: https://img.shields.io/pypi/v/onthefly.svg
         :target: https://pypi.python.org/pypi/onthefly
 
-.. image:: https://img.shields.io/travis/mroavi/onthefly.svg
-        :target: https://travis-ci.com/mroavi/onthefly
-
-.. image:: https://readthedocs.org/projects/onthefly/badge/?version=latest
-        :target: https://onthefly.readthedocs.io/en/latest/?badge=latest
-        :alt: Documentation Status
-
-
-
-
-WIP
-
-* Free software: MIT license
-* Documentation: https://onthefly.readthedocs.io.
+onthefly allows you to emulate typing the contents of an input file by wildly pressing the *asdf jkl;* keys of your keyboard.
 
 
 Features
@@ -31,32 +17,58 @@ Features
 Installation
 ------------
 
-Install and update using `pip`_:
+Install and update using pip:
 
 .. code-block:: text
 
     $ sudo python -m pip install onthefly
 
-.. _pip: https://pip.pypa.io/en/stable/quickstart/
 
+Usage
+-----
 
-Configure
----------
-
-* TODO: Show how to detect and configure the keyboard
+Identify your keyboard with `evtest`:
 
 .. code-block:: text
 
     $ sudo python -m evdev.evtest
 
-Usage
------
+    ID  Device               Name                                ...
+    -------------------------------------------------------------...
+    0   /dev/input/event0    Lid Switch                          ...
+    1   /dev/input/event1    Power Button                        ...
+    2   /dev/input/event2    Sleep Button                        ...
+    3   /dev/input/event3    Power Button                        ...
+    4   /dev/input/event4    AT Translated Set 2 keyboard        ...
+    5   /dev/input/event5    Video Bus                           ...
+    6   /dev/input/event6    Logitech M215 2nd Gen               ...
+    7   /dev/input/event7    Logitech K330                       ...
+    8   /dev/input/event8    SynPS/2 Synaptics TouchPad          ...
+    .
+    .
+    .
 
-To have access to the keyboard, onthefly needs to be run with sudo privileges:
+From this output, we see that my keyboard is identified with the name "Logitech K330".
+
+Pass the name of your keyboard as an argument to the `keyboard` option when invoking onthefly for the first time.
 
 .. code-block:: text
 
-    $ sudo onthefly /path/to/file
+   $ sudo onthefly --keyboard="Logitech K330" /path/to/file
+
+Note that onthefly needs to be run with sudo privileges in order to have access to the keyboard events:
+
+The keyboard name is remembered so you do not have to re-enter it in future invokations:
+
+.. code-block:: text
+
+   $ sudo onthefly /path/to/file
+
+
+License
+-------
+
+* Free software: MIT license
 
 
 Credits

@@ -6,9 +6,9 @@ from .onthefly import onthefly
 
 @click.command()
 @click.argument('filename', type=click.Path(exists=True))
-@click.option('--keyboard', help='The match string used to search for the keyboard.')
+@click.option('--keyboard', help='A match string used to identify your keyboard.')
 def main(filename, keyboard):
-    """Emulates typing each character contained inside FILENAME"""
+    """Emulates typing each character contained inside FILENAME."""
     onthefly(filename, keyboard)
     return 0
 
