@@ -5,11 +5,10 @@ from .onthefly import onthefly
 
 
 @click.command()
-@click.argument("input_file", default="/home/mroavi/Desktop/input.jl")
-def main(input_file):
-    """Emulates typing each character of an input file"""
-    click.echo("Hey there!")
-    onthefly(input_file)
+@click.argument('filename', type=click.Path(exists=True))
+def main(filename):
+    """Emulates typing each character contained inside FILENAME"""
+    onthefly(filename)
     return 0
 
 
