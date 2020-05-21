@@ -28,6 +28,14 @@ Features
 
 * TODO
 
+Install
+--------
+Install and update using `pip`_:
+```
+sudo python -m pip install onthefly
+```
+.. _pip: https://pip.pypa.io/en/stable/quickstart/
+
 Credits
 -------
 
