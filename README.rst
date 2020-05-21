@@ -20,7 +20,7 @@ Features
 Installation
 ------------
 
-Install and update using pip:
+Install and update at system level using pip:
 
 .. code-block:: text
 
