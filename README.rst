@@ -5,7 +5,8 @@ onthefly
 .. image:: https://img.shields.io/pypi/v/onthefly.svg
         :target: https://pypi.python.org/pypi/onthefly
 
-onthefly allows you to emulate typing the contents of an input file by wildly pressing the *asdf jkl;* keys of your keyboard. Great for live coding presentations.
+onthefly allows you to emulate typing the contents of an input file by wildly pressing the *asdf jkl;* keys of your keyboard.
+Great for live coding presentations.
 
 
 Features
@@ -49,7 +50,7 @@ Identify your keyboard with `evtest`:
     .
     .
 
-From this output, we see that my keyboard is identified with the name "Logitech K330".
+From this output, we see that my keyboard is identified with the name `Logitech K330`.
 
 Pass the name of your keyboard as an argument to the `keyboard` option when invoking onthefly for the first time.
 
