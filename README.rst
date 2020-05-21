@@ -16,8 +16,7 @@ onthefly
 
 
 
-Code like a god on-the-fly
-
+WIP
 
 * Free software: MIT license
 * Documentation: https://onthefly.readthedocs.io.
@@ -26,15 +25,39 @@ Code like a god on-the-fly
 Features
 --------
 
-* TODO
+* Unicode support
 
-Install
---------
+
+Installation
+------------
+
 Install and update using `pip`_:
-```
-sudo python -m pip install onthefly
-```
+
+.. code-block:: text
+
+    $ sudo python -m pip install onthefly
+
 .. _pip: https://pip.pypa.io/en/stable/quickstart/
+
+
+Configure
+---------
+
+* TODO: Show how to detect and configure the keyboard
+
+.. code-block:: text
+
+    $ sudo python -m evdev.evtest
+
+Usage
+-----
+
+To have access to the keyboard, onthefly needs to be run with sudo privileges:
+
+.. code-block:: text
+
+    $ sudo onthefly /path/to/file
+
 
 Credits
 -------
