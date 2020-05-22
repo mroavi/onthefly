@@ -9,7 +9,7 @@ onthefly
         :target: https://pypi.python.org/pypi/onthefly
 
 
-onthefly allows you to emulate typing the contents of an input file by wildly pressing the *asdf jkl;* keys of your keyboard.
+onthefly allows you to emulate typing the contents of an input file by wildly pressing the *asdf jkl;* keys on your keyboard.
 Great for live coding presentations.
 
 <a href="https://asciinema.org/a/1O1h6bm4KiQcYVCSduQtGIohD" target="_blank"><img src="https://asciinema.org/a/1O1h6bm4KiQcYVCSduQtGIohD.svg" width="835"/></a>
