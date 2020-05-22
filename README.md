@@ -1,10 +1,9 @@
-========
 onthefly
 ========
 
 [![Build Status](https://img.shields.io/pypi/v/onthefly.svg)](https://pypi.python.org/pypi/onthefly)
 
-[![asciicast](https://asciinema.org/a/14.png)](https://asciinema.org/a/14)
+[![asciicast](https://asciinema.org/a/1O1h6bm4KiQcYVCSduQtGIohD.svg)](https://asciinema.org/a/1O1h6bm4KiQcYVCSduQtGIohD)
 
 onthefly allows you to emulate typing the contents of an input file by wildly pressing the *asdf jkl;* keys of your keyboard.
 Great for live coding presentations.
