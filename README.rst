@@ -64,9 +64,9 @@ Pass the name of your keyboard as an argument to the :bash:`--keyboard` option w
 
    $ onthefly --keyboard="Logitech K330" /path/to/file
 
-Note that onthefly prompts for the root passowrd in order to have access to the keyboard events.
+Note that onthefly prompts for the root password in order to have access to the keyboard events.
 
-The keyboard name is remembered so you do not have to re-enter it in future invokations:
+The keyboard name is remembered so you do not have to re-enter it in future invocations:
 
 .. code-block:: text
 
