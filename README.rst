@@ -19,23 +19,23 @@ Features
 --------
 
 * Unicode support
-* Works with any text editor
+* Works with any text editor (in fact, with any program)
 
 
 Installation
 ------------
 
-Install and update at system level using pip:
+Install and update using pip:
 
 .. code-block:: text
 
-    $ sudo python -m pip install onthefly
+    $ pip install onthefly
 
 
 Usage
 -----
 
-Identify your keyboard with :code:`evtest`:
+Identify your keyboard with :bash:`evtest`:
 
 .. code-block:: text
 
@@ -56,21 +56,21 @@ Identify your keyboard with :code:`evtest`:
     .
     .
 
-From this output, we see that my keyboard is identified with the name :code:`Logitech K330`.
+From this output, we see that my keyboard is identified with the name :bash:`Logitech K330`.
 
-Pass the name of your keyboard as an argument to the :code:`keyboard` option when invoking onthefly for the first time.
+Pass the name of your keyboard as an argument to the :bash:`--keyboard` option when invoking onthefly for the first time.
 
 .. code-block:: text
 
-   $ sudo onthefly --keyboard="Logitech K330" /path/to/file
+   $ onthefly --keyboard="Logitech K330" /path/to/file
 
-Note that onthefly needs to be run with sudo privileges in order to have access to the keyboard events:
+Note that onthefly prompts for the root passowrd in order to have access to the keyboard events.
 
 The keyboard name is remembered so you do not have to re-enter it in future invokations:
 
 .. code-block:: text
 
-   $ sudo onthefly /path/to/file
+   $ onthefly /path/to/file
 
 Type the Pause/Break key to quit the program at any moment. Supports using the Backspace key to erase characters without going out of sync with respect to the input file.
 
