@@ -8,8 +8,7 @@ onthefly
 .. image:: https://img.shields.io/pypi/v/onthefly.svg
         :target: https://pypi.python.org/pypi/onthefly
 
-.. image:: demo.svg
-   :target: ../assets/demo.svg
+.. image:: ../assets/demo.svg
 
 
 onthefly allows you to emulate typing the contents of an input file by wildly pressing the *asdf jkl;* keys on your keyboard.
