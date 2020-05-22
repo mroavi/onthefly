@@ -4,13 +4,13 @@
 
 from setuptools import setup, find_packages
 
-with open('README.rst') as readme_file:
+with open('README.md') as readme_file:
     readme = readme_file.read()
 
 with open('HISTORY.rst') as history_file:
     history = history_file.read()
 
-requirements = ['Click>=7.0', 'evdev', 'appdirs']
+requirements = ['Click>=7.0', 'evdev', 'appdirs', 'elevate']
 
 setup_requirements = [ ]
 
@@ -48,6 +48,6 @@ setup(
     test_suite='tests',
     tests_require=test_requirements,
     url='https://github.com/mroavi/onthefly',
-    version='1.0.2',
+    version='1.0.3',
     zip_safe=False,
 )

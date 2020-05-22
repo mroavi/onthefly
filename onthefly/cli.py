@@ -2,6 +2,7 @@
 import sys
 import click
 from .onthefly import onthefly
+from elevate import elevate
 
 
 @click.command()
@@ -9,6 +10,7 @@ from .onthefly import onthefly
 @click.option('--keyboard', help='A match string used to identify your keyboard.')
 def main(filename, keyboard):
     """Emulates typing each character contained inside FILENAME."""
+    elevate()
     onthefly(filename, keyboard)
     return 0
 
