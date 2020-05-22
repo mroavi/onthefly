@@ -1,3 +1,6 @@
+.. role:: bash(code)
+   :language: bash
+
 ========
 onthefly
 ========
