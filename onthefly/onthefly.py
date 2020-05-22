@@ -98,7 +98,12 @@ def onthefly(input_file, keyboard_match_string):
     dev = find_keyboard(keyboard_match_string)
     if not dev:
         print("""Error: No keyboard found.
-Use `sudo python -m evdev.evtest` to find the name of your keyboard.""")
+
+Use
+    $ sudo python -m evdev.evtest
+to find the name of your keyboard and pass it to the `keyboard` option when invoking onthefly, e.g.:
+    $ sudo onthefly --keyboard="Logitech K330" /path/to/file
+""")
         sys.exit()
 
     file_characters = read_input_file(input_file) # read all characters in the input file
