@@ -21,7 +21,7 @@ Installation
 
 Install and update at system level using pip:
 
-```
+```bash
 $ sudo python -m pip install onthefly
 ```
 
@@ -30,7 +30,7 @@ Usage
 
 Identify your keyboard with `evtest`:
 
-```
+```bash
 $ sudo python -m evdev.evtest
 
 ID  Device               Name                                ...
@@ -53,7 +53,7 @@ From this output, we see that my keyboard is identified with the name `Logitech 
 
 Pass the name of your keyboard as an argument to the `keyboard` option when invoking onthefly for the first time.
 
-```
+```bash
 $ sudo onthefly --keyboard="Logitech K330" /path/to/file
 ```
 
@@ -61,7 +61,7 @@ Note that onthefly needs to be run with sudo privileges in order to have access 
 
 The keyboard name is remembered so you do not have to re-enter it in future invokations:
 
-```
+```bash
 $ sudo onthefly /path/to/file
 ```
 
