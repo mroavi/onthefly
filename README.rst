@@ -53,9 +53,9 @@ Identify your keyboard with :code:`evtest`:
     .
     .
 
-From this output, we see that my keyboard is identified with the name `Logitech K330`.
+From this output, we see that my keyboard is identified with the name :code:`Logitech K330`.
 
-Pass the name of your keyboard as an argument to the `keyboard` option when invoking onthefly for the first time.
+Pass the name of your keyboard as an argument to the :code:`keyboard` option when invoking onthefly for the first time.
 
 .. code-block:: text
 
