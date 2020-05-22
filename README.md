@@ -7,7 +7,7 @@ onthefly allows you to emulate typing the contents of an input file by wildly pr
 
 Great for live coding presentations.
 
-![Demo](../assets/demo.svg)
+![Demo](../assets/demo.gif)
 
 
 Features
