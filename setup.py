@@ -4,7 +4,7 @@
 
 from setuptools import setup, find_packages
 
-with open('README.rst') as readme_file:
+with open('README.md') as readme_file:
     readme = readme_file.read()
 
 requirements = ['Click>=7.0', 'evdev', 'appdirs', 'elevate']
@@ -37,6 +37,7 @@ setup(
     install_requires=requirements,
     license="MIT license",
     long_description=readme,
+    long_description_content_type='text/markdown',
     include_package_data=True,
     keywords='onthefly',
     name='onthefly',
@@ -45,6 +46,6 @@ setup(
     test_suite='tests',
     tests_require=test_requirements,
     url='https://github.com/mroavi/onthefly',
-    version='1.0.4',
+    version='1.0.5',
     zip_safe=False,
 )
