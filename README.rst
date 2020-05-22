@@ -32,7 +32,7 @@ Install and update at system level using pip:
 Usage
 -----
 
-Identify your keyboard with `evtest`:
+Identify your keyboard with :code:`evtest`:
 
 .. code-block:: text
 
