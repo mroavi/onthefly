@@ -28,7 +28,7 @@ setup(
         'Programming Language :: Python :: 3.7',
         'Programming Language :: Python :: 3.8',
     ],
-    description="Code like a god on-the-fly",
+    description="Type like a god on-the-fly",
     entry_points={
         'console_scripts': [
             'onthefly=onthefly.cli:main',
