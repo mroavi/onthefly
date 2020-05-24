@@ -66,7 +66,7 @@ The keyboard name is remembered so you do not have to re-enter it in future invo
    $ onthefly /path/to/file
 ```
 
-Type the Pause/Break key to quit the program at any moment. Supports using the Backspace key to erase characters without going out of sync with respect to the input file.
+Type the `Pause/Break` key to quit the program at any moment. Use the `Backspace` key to erase characters without going out of sync with the input file.
 
 License
 -------
