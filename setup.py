@@ -26,6 +26,8 @@ setup(
         'Programming Language :: Python :: 3.6',
         'Programming Language :: Python :: 3.7',
         'Programming Language :: Python :: 3.8',
+        'Programming Language :: Python :: 3.9',
+        'Programming Language :: Python :: 3.10',
     ],
     description="Type like a god on-the-fly",
     entry_points={
@@ -45,6 +47,6 @@ setup(
     test_suite='tests',
     tests_require=test_requirements,
     url='https://github.com/mroavi/onthefly',
-    version='1.0.7',
+    version='1.0.8',
     zip_safe=False,
 )
