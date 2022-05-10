@@ -3,7 +3,7 @@
 onthefly
 ========
 
-onthefly allows you to emulate typing the contents of an input file by wildly pressing the *asdf jkl;* keys on your keyboard.
+*onthefly* allows you to emulate typing the contents of an input file by wildly pressing the *asdf jkl;* keys on your keyboard.
 
 Great for live coding presentations.
 
@@ -23,16 +23,16 @@ Installation
 Install and update using pip:
 
 ```
-$ pip install onthefly
+$ python -m pip install onthefly
 ```
 
 Usage
 -----
 
-Identify your keyboard with `evtest`:
+Identify your keyboard's device path with the command line tool `evemu-record`:
 
 ```
-$ sudo python -m evdev.evtest
+> sudo evemu-record
 
 ID  Device               Name                                 ...
 ------------------------------------------------------------- ...
@@ -50,15 +50,15 @@ ID  Device               Name                                 ...
 .
 ```
 
-From this output, we see that my keyboard is identified with the name `Logitech K330`.
+From this output, we see that my keyboard (a Logitech K330) has the device path `/dev/input/event7`.
 
-Pass the name of your keyboard as an argument to the `--keyboard` option when invoking onthefly for the first time.
+Pass the device path of your keyboard as an argument to the `--keyboard` option when invoking onthefly for the first time.
 
 ```
-   $ onthefly --keyboard="Logitech K330" /path/to/file
+   $ onthefly --keyboard="/dev/input/event7" /path/to/file
 ```
 
-Note that onthefly prompts for the root password in order to have access to the keyboard events.
+Note that *onthefly* prompts for the root password in order to have access to the keyboard events.
 
 The keyboard name is remembered so you do not have to re-enter it in future invocations:
 
@@ -78,4 +78,3 @@ Credits
 -------
 
 This package was created with [Cookiecutter](https://github.com/audreyr/cookiecutter) and the [audreyr/cookiecutter-pypackage](https://github.com/audreyr/cookiecutter-pypackage) project template.
-

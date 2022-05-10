@@ -7,9 +7,9 @@ from elevate import elevate
 
 @click.command()
 @click.argument('filename', type=click.Path(exists=True))
-@click.option('--keyboard', help='A match string used to identify your keyboard.')
+@click.option('--keyboard', help='Your keyboard\'s device path. You can use `sudo evemu-record` to identify your keyboard\'s device path')
 def main(filename, keyboard):
-    """ Allows you to emulate typing the contents of an input file by wildly pressing the asdf jkl; keys of your keyboard."""
+    """ Allows you to emulate typing the contents of an input file by wildly pressing the 'asdfjkl;' keys of your keyboard."""
     elevate(graphical=False)
     onthefly(filename, keyboard)
     return 0

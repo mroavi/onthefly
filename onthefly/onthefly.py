@@ -60,11 +60,12 @@ def read_input_file(input_file):
 
 def find_keyboard(match_str):
     try:
-        # Find all input devices.
+        # Find all input devices
         devices = [InputDevice(fn) for fn in list_devices()]
-        # Limit the list to those containing MATCH and pick the first one.
-        dev = [d for d in devices if match_str in d.name][0]
+        # Pick the the device that matches the provided `match_str.x
+        dev = [d for d in devices if match_str == d.path][0]
     except:
+        # No device found; return None
         dev = None
 
     return dev
