@@ -1,7 +1,7 @@
 """Console script for onthefly."""
 import sys
 import click
-from .onthefly import onthefly
+from onthefly.onthefly import onthefly
 from elevate import elevate
 
 

@@ -15,7 +15,6 @@ test_requirements = [ ]
 
 setup(
     author="Martin Roa Villescas",
-    author_email='mroavi@gmail.com',
     python_requires='>=3.5',
     classifiers=[
         'Development Status :: 2 - Pre-Alpha',
@@ -46,6 +45,6 @@ setup(
     test_suite='tests',
     tests_require=test_requirements,
     url='https://github.com/mroavi/onthefly',
-    version='1.0.6',
+    version='1.0.7',
     zip_safe=False,
 )
