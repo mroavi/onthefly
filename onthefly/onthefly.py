@@ -43,19 +43,10 @@ WRITE_NEXT_CHAR_KEYS = [
     ecodes.KEY_SEMICOLON,
 ]
 
-def read_next_character(f):
-    """Reads one character from the given textfile"""
-    c = f.read(1)
-    while c:
-        yield c
-        c = f.read(1)
-
 def read_input_file(input_file):
-    characters = []
     with open(input_file, encoding="utf-8") as f:
-        """Opens a file and store each character as an element of a list"""
-        for c in read_next_character(f):
-            characters.append(c)
+        """Opens a file and stores each character as an element of a list"""
+        characters = f.read()
     return characters
 
 def find_keyboard(match_str):
@@ -222,3 +213,6 @@ to find the name of your keyboard and pass it to the `keyboard` option when invo
 
 # ConfigParser quickstart
 # https://docs.python.org/3/library/configparser.html
+
+# Unicode support depends on ibus
+# https://wiki.archlinux.org/title/IBus

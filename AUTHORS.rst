@@ -5,7 +5,7 @@ Credits
 Development Lead
 ----------------
 
-* Martin Roa Villescas <mroavi@gmail.com>
+* Martin Roa Villescas
 
 Contributors
 ------------

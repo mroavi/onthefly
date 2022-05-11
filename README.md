@@ -13,7 +13,7 @@ Great for live coding presentations.
 Features
 --------
 
-* Unicode support
+* Unicode support (you need [ibus](https://wiki.archlinux.org/title/IBus) installed and running)
 * Works with any text editor (in fact, with any program)
 
 
