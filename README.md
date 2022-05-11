@@ -23,7 +23,7 @@ Installation
 Install and update using pip:
 
 ```
-$ python -m pip install onthefly
+$ sudo python -m pip install onthefly
 ```
 
 Usage
