@@ -31,7 +31,7 @@ shift_ascii2keycode= {
 
 # Define the keys that can be used to indicate when to type the next character
 # These name definitions can be found running evtest from the terminal:
-#    > sudo python -m evdev.evtest
+#    > sudo evtest
 WRITE_NEXT_CHAR_KEYS = [
     ecodes.KEY_A,
     ecodes.KEY_S,
@@ -113,7 +113,7 @@ to find the name of your keyboard and pass it to the `keyboard` option when invo
                     dev.ungrab() # mrv
                     break
 
-                elif event.code == ecodes.KEY_BACKSPACE and event.value ==1:
+                elif event.code == ecodes.KEY_BACKSPACE and event.value == 1:
                     # Decrement counter
                     current_char_idx -= 1
                     # Passthrough key event unmodified
@@ -216,3 +216,6 @@ to find the name of your keyboard and pass it to the `keyboard` option when invo
 
 # Unicode support depends on ibus
 # https://wiki.archlinux.org/title/IBus
+
+# Keyboard input
+# https://wiki.archlinux.org/title/Keyboard_input#Identifying_scancodes
