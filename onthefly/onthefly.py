@@ -8,8 +8,7 @@ from configparser import ConfigParser
 import time, appdirs, sys
 from pathlib import Path
 
-# Give time for packages to initialize properly
-time.sleep(0.1)
+time.sleep(0.1) # give time for packages to initialize properly
 
 ascii2keycode = {
     None:0, u'ESC': 1, u'1': 2, u'2': 3, u'3': 4, u'4': 5, u'5': 6, u'6': 7, u'7': 8, u'8': 9,
@@ -30,8 +29,7 @@ shift_ascii2keycode= {
 }
 
 # Define the keys that can be used to indicate when to type the next character
-# These name definitions can be found running evtest from the terminal:
-#    > sudo evtest
+# These name definitions are defined in /usr/include/linux/input-event-codes.h
 WRITE_NEXT_CHAR_KEYS = [
     ecodes.KEY_A,
     ecodes.KEY_S,
@@ -45,177 +43,135 @@ WRITE_NEXT_CHAR_KEYS = [
 
 def read_input_file(input_file):
     with open(input_file, encoding="utf-8") as f:
-        """Opens a file and stores each character as an element of a list"""
-        characters = f.read()
-    return characters
+        chars = f.read()
+    return chars
 
-def find_keyboard(match_str):
-    try:
-        # Find all input devices
-        devices = [InputDevice(fn) for fn in list_devices()]
-        # Pick the the device that matches the provided `match_str.x
-        dev = [d for d in devices if match_str == d.path][0]
-    except:
-        # No device found; return None
-        dev = None
+def create_config_file(filepath):
+    Path(Path(filepath).parent).mkdir(parents=True, exist_ok=True) # create dirs to config file if necessary
+    Path(filepath).touch() # create an empty config file if it doesn't exist
 
-    return dev
-
-def bookkeep_config_file(keyboard_match_string, filename):
-    # create and empty config file and dirs if these don't yet exist
-    Path(Path(filename).parent).mkdir(parents=True, exist_ok=True)
-    Path(filename).touch()
-    # store the current keyboard_match_string is not empty
-    if keyboard_match_string:
-        config = ConfigParser()
-        config['DEFAULT'] = {'keyboard_match_string': keyboard_match_string}
-        # save config to file
-        with open(filename, 'w') as configfile:
-            config.write(configfile)
-
-def read_config_match_string(filename):
+def update_config_file(keyboard_device_path, filepath):
     config = ConfigParser()
-    config.read(filename)
+    config['DEFAULT'] = {'keyboard_device_path': keyboard_device_path}
+    with open(filepath, 'w') as f:
+        config.write(f) # store config in `filepath`
+
+def read_config_keyboard_device_path(filepath):
+    config = ConfigParser()
+    config.read(filepath)
     try:
-        return config['DEFAULT']['keyboard_match_string']
+        return config['DEFAULT']['keyboard_device_path']
     except:
         return None
 
-def onthefly(input_file, keyboard_match_string):
+def simulate_key(ui, code, keystate):
+    ui.write(ecodes.EV_KEY, code, keystate)
+    ui.syn()
 
-    configfile = appdirs.user_config_dir() + '/onthefly/config.cfg'
-    bookkeep_config_file(keyboard_match_string, configfile)
-    keyboard_match_string = read_config_match_string(configfile)
+def simulate_key_press(ui, code):
+    ui.write(ecodes.EV_KEY, code, 1)
+    ui.syn()
 
-    dev = find_keyboard(keyboard_match_string)
-    if not dev:
+def simulate_key_release(ui, code):
+    ui.write(ecodes.EV_KEY, code, 0)
+    ui.syn()
+
+def onthefly(input_file, keyboard_device_path):
+
+    config_filepath = appdirs.user_config_dir() + '/onthefly/config.cfg'
+    create_config_file(config_filepath)
+
+    # If `keyboard_device_path` was provided, store it in `config_filepath`
+    if keyboard_device_path: update_config_file(keyboard_device_path, config_filepath)
+
+    # Read the `keyboard_device_path` stored in the config file (returns None no entry is found)
+    keyboard_device_path = read_config_keyboard_device_path(config_filepath)
+
+    if keyboard_device_path in list_devices():
+        dev = InputDevice(keyboard_device_path)
+    else:
         print("""Error: No keyboard found.
 
 Use
     $ sudo python -m evdev.evtest
-to find the name of your keyboard and pass it to the `keyboard` option when invoking onthefly, e.g.:
-    $ sudo onthefly --keyboard="Logitech K330" /path/to/file
+to find the device path of your keyboard and pass it to the `keyboard` option when invoking onthefly, e.g.:
+    $ sudo onthefly --keyboard="/dev/input/event7" /path/to/file
 """)
         sys.exit()
 
-    file_characters = read_input_file(input_file) # read all characters in the input file
-    current_char_idx = 0 # indicates the next character to be emulated
+    chars = read_input_file(input_file) # read all chars in the input file
+    char_idx = 0 # indicates the next character to be emulated
 
-    dev.grab() # Grab, i.e. prevent the keyboard from emitting original events.
+    dev.grab() # other applications will be unable to receive events until the keyboard device is released
 
-    # Create a new keyboard mimicking the original one.
-    with UInput.from_device(dev, name='onthefly') as ui:
-        for event in dev.read_loop():  # Read events from original keyboard.
-            if event.type == ecodes.EV_KEY:  # Process key events.
-                if event.code == ecodes.KEY_PAUSE and event.value == 1 \
-                        or current_char_idx == len(file_characters):
-                    # Exit on pressing PAUSE or when all characters have been written.
-                    dev.ungrab() # mrv
+    with UInput.from_device(dev, name='onthefly') as ui: # create a new "virtual" keyboard
+        for event in dev.read_loop():  # read events from the "real" keyboard
+            if event.type == ecodes.EV_KEY:  # only process "key" events
+
+                ak = dev.active_keys() # get the active keys (keys that are being pressed down)
+
+                # Exit on pressing PAUSE or when all chars have been written.
+                if (event.code == ecodes.KEY_PAUSE) or (char_idx == len(chars)):
+                    dev.ungrab() # release the keybaord device so that other applications can receive events
                     break
 
-                elif event.code == ecodes.KEY_BACKSPACE and event.value == 1:
-                    # Decrement counter
-                    current_char_idx -= 1
-                    # Passthrough key event unmodified
-                    ui.write(ecodes.EV_KEY, event.code, 1)
-                    ui.write(ecodes.EV_KEY, event.code, 0)
-                    ui.syn()
+                # Forward the event if any of the following "key modifiers" is being pressed
+                elif (ecodes.KEY_LEFTCTRL in ak) or (ecodes.KEY_LEFTMETA in ak) or (ecodes.KEY_LEFTALT in ak):
+                    simulate_key(ui, event.code, event.value)
 
-                # Write next char when:
-                #   - current key pressed is in the set of permitted keys
-                #   - Control key is not pressed
-                #   - current action is a press and not a release
-                elif event.code in WRITE_NEXT_CHAR_KEYS \
-                        and ecodes.KEY_LEFTCTRL not in dev.active_keys() \
-                        and event.value == 1:
-                    # Check if we need to press shift
-                    if file_characters[current_char_idx] in ascii2keycode:
-                        # No, we don't. Lookup the key we want to press/release
-                        remapped_code = ascii2keycode[file_characters[current_char_idx]]
-                        ui.write(ecodes.EV_KEY, remapped_code, 1)
-                        ui.syn()
-                        ui.write(ecodes.EV_KEY, remapped_code, 0)
-                        ui.syn()
-                    elif file_characters[current_char_idx] in shift_ascii2keycode:
-                        # Yes, we do. Lookup the key we want to press/release
-                        remapped_code = shift_ascii2keycode[file_characters[current_char_idx]]
-                        ui.write(ecodes.EV_KEY, ecodes.KEY_LEFTSHIFT, 1) # press shift
-                        ui.syn()
-                        ui.write(ecodes.EV_KEY, remapped_code, 1)
-                        ui.syn()
-                        ui.write(ecodes.EV_KEY, remapped_code, 0)
-                        ui.syn()
-                        ui.write(ecodes.EV_KEY, ecodes.KEY_LEFTSHIFT, 0) # release shift
-                        ui.syn()
+                elif event.code == ecodes.KEY_BACKSPACE:
+                    # Simulate a backspace only on key presses
+                    if event.value == 1: 
+                        char_idx -= 1 # decrement counter
+                        simulate_key_press(ui, ecodes.KEY_BACKSPACE)
+                        simulate_key_release(ui, ecodes.KEY_BACKSPACE)
                     else:
-                        # The character is not in either dictionary, then it must be a unicode
-                        # Press Control+Shift+U
-                        ui.write(ecodes.EV_KEY, ecodes.KEY_LEFTCTRL, 1)
-                        ui.syn()
-                        ui.write(ecodes.EV_KEY, ecodes.KEY_LEFTSHIFT, 1)
-                        ui.syn()
-                        ui.write(ecodes.EV_KEY, ecodes.KEY_U, 1)
-                        ui.syn()
-                        ui.write(ecodes.EV_KEY, ecodes.KEY_U, 0)
-                        ui.syn()
-                        ui.write(ecodes.EV_KEY, ecodes.KEY_LEFTSHIFT, 0)
-                        ui.syn()
-                        ui.write(ecodes.EV_KEY, ecodes.KEY_LEFTCTRL, 0)
-                        ui.syn()
+                        continue # ignore key releases
 
-                        # Write each hex digit
-                        for hex_digit in '%X' % ord(file_characters[current_char_idx]):
-                            keycode = getattr(ecodes, 'KEY_%s' % hex_digit)
-                            ui.write(ecodes.EV_KEY, keycode, 1)
-                            ui.syn()
-                            ui.write(ecodes.EV_KEY, keycode, 0)
-                            ui.syn()
+                # Simulate press/release of next char if the key is inside of the WRITE_NEXT_CHAR_KEYS set
+                elif event.code in WRITE_NEXT_CHAR_KEYS:
+                    # Simulate next char only on key presses
+                    if event.value == 1: 
+                        # Check if we need to press shift
+                        if chars[char_idx] in ascii2keycode:
+                            # No, we don't. Lookup the key we want to press/release
+                            remapped_code = ascii2keycode.get(chars[char_idx])
+                            simulate_key_press(ui, remapped_code)
+                            simulate_key_release(ui, remapped_code)
+                        elif chars[char_idx] in shift_ascii2keycode:
+                            # Yes, we do. Lookup the key we want to press/release
+                            remapped_code = shift_ascii2keycode.get(chars[char_idx])
+                            simulate_key_press(ui, ecodes.KEY_LEFTSHIFT)
+                            simulate_key_press(ui, remapped_code)
+                            simulate_key_release(ui, remapped_code)
+                            simulate_key_release(ui, ecodes.KEY_LEFTSHIFT)
+                        else:
+                            # The character is not in either dictionary, then it must be a unicode
+                            # Press Control+Shift+U
+                            simulate_key_press(ui, ecodes.KEY_LEFTCTRL)
+                            simulate_key_press(ui, ecodes.KEY_LEFTSHIFT)
+                            simulate_key_press(ui, ecodes.KEY_U)
+                            simulate_key_release(ui, ecodes.KEY_U)
+                            simulate_key_release(ui, ecodes.KEY_LEFTSHIFT)
+                            simulate_key_release(ui, ecodes.KEY_LEFTCTRL)
 
-                        # Press Enter
-                        ui.write(ecodes.EV_KEY, ecodes.KEY_ENTER, 1)
-                        ui.write(ecodes.EV_KEY, ecodes.KEY_ENTER, 0)
-                        ui.syn()
+                            # Write each hex digit
+                            for hex_digit in '%X' % ord(chars[char_idx]):
+                                keycode = getattr(ecodes, 'KEY_%s' % hex_digit)
+                                simulate_key_press(ui, keycode)
+                                simulate_key_release(ui, keycode)
 
-                    # Increment counter
-                    current_char_idx += 1
+                            # Press Enter
+                            simulate_key_press(ui, ecodes.KEY_ENTER)
+                            simulate_key_release(ui, ecodes.KEY_ENTER)
+
+                        # Increment counter
+                        char_idx += 1
+                    else:
+                        continue # ignore key releases
                 else:
-                    # Passthrough other key events unmodified.
-                    ui.write(ecodes.EV_KEY, event.code, event.value)
-                    ui.syn()
+                    simulate_key(ui, event.code, event.value) # forward any other key events
             else:
-                # Passthrough other events unmodified (e.g. SYNs).
+                # Passthrough OTHER type of events (e.g. SYNs)
                 ui.write(event.type, event.code, event.value)
                 ui.syn()
-
-# Convert the scancode into a ASCII code
-# https://stackoverflow.com/questions/19732978/how-can-i-get-a-string-from-hid-device-in-python-with-evdev
-
-# python-evdev tutorial:
-# https://python-evdev.readthedocs.io/en/latest/tutorial.html#
-
-# example_remap.py (does not work out of the box)
-# https://gist.github.com/paulo-raca/0e772864013b88de205a
-
-# pyinstaller
-# https://www.pyinstaller.org/
-
-# How to terminate a Python script
-# https://stackoverflow.com/questions/73663/how-to-terminate-a-python-script
-
-# How do I get the parent directory in Python?
-# https://stackoverflow.com/a/2860193/1706778
-
-# Implement touch using Python?
-# https://stackoverflow.com/a/34603829/1706778
-
-# How can I safely create a nested directory?
-# https://stackoverflow.com/a/273227/1706778
-
-# ConfigParser quickstart
-# https://docs.python.org/3/library/configparser.html
-
-# Unicode support depends on ibus
-# https://wiki.archlinux.org/title/IBus
-
-# Keyboard input
-# https://wiki.archlinux.org/title/Keyboard_input#Identifying_scancodes
