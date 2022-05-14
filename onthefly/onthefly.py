@@ -76,6 +76,29 @@ def simulate_key_release(ui, code):
     ui.write(ecodes.EV_KEY, code, 0)
     ui.syn()
 
+def simulate_key_stroke(ui, code):
+    simulate_key_press(ui, code)
+    simulate_key_release(ui, code)
+
+def simulate_unicode_input(ui, unicode):
+    # Press Control+Shift+U
+    simulate_key_press(ui, ecodes.KEY_LEFTCTRL)
+    simulate_key_press(ui, ecodes.KEY_LEFTSHIFT)
+    simulate_key_press(ui, ecodes.KEY_U)
+    simulate_key_release(ui, ecodes.KEY_U)
+    simulate_key_release(ui, ecodes.KEY_LEFTSHIFT)
+    simulate_key_release(ui, ecodes.KEY_LEFTCTRL)
+
+    # Write each hex digit
+    for hex_digit in '%X' % ord(unicode):
+        keycode = getattr(ecodes, 'KEY_%s' % hex_digit)
+        simulate_key_press(ui, keycode)
+        simulate_key_release(ui, keycode)
+
+    # Press Enter
+    simulate_key_press(ui, ecodes.KEY_ENTER)
+    simulate_key_release(ui, ecodes.KEY_ENTER)
+
 def onthefly(input_file, keyboard_device_path):
 
     config_filepath = appdirs.user_config_dir() + '/onthefly/config.cfg'
@@ -123,8 +146,7 @@ to find the device path of your keyboard and pass it to the `keyboard` option wh
                     # Simulate a backspace only on key presses
                     if event.value == 1: 
                         char_idx -= 1 # decrement counter
-                        simulate_key_press(ui, ecodes.KEY_BACKSPACE)
-                        simulate_key_release(ui, ecodes.KEY_BACKSPACE)
+                        simulate_key_stroke(ui, ecodes.KEY_BACKSPACE)
                     else:
                         continue # ignore key releases
 
@@ -132,46 +154,64 @@ to find the device path of your keyboard and pass it to the `keyboard` option wh
                 elif event.code in WRITE_NEXT_CHAR_KEYS:
                     # Simulate next char only on key presses
                     if event.value == 1: 
-                        # Check if we need to press shift
+                        # Is the current char in the "no-shift" ascii table?
                         if chars[char_idx] in ascii2keycode:
-                            # No, we don't. Lookup the key we want to press/release
                             remapped_code = ascii2keycode.get(chars[char_idx])
-                            simulate_key_press(ui, remapped_code)
-                            simulate_key_release(ui, remapped_code)
+                            simulate_key_stroke(ui, remapped_code)
+                        # No, so is it in the "shift" ascii table?
                         elif chars[char_idx] in shift_ascii2keycode:
-                            # Yes, we do. Lookup the key we want to press/release
                             remapped_code = shift_ascii2keycode.get(chars[char_idx])
                             simulate_key_press(ui, ecodes.KEY_LEFTSHIFT)
-                            simulate_key_press(ui, remapped_code)
-                            simulate_key_release(ui, remapped_code)
+                            simulate_key_stroke(ui, remapped_code)
                             simulate_key_release(ui, ecodes.KEY_LEFTSHIFT)
-                        else:
-                            # The character is not in either dictionary, then it must be a unicode
-                            # Press Control+Shift+U
-                            simulate_key_press(ui, ecodes.KEY_LEFTCTRL)
+                        # No, then it must be a unicode char. Is it a left unicode arrow?
+                        elif ord(chars[char_idx]) == 0x2190: # ←
+                            simulate_key_stroke(ui, ecodes.KEY_LEFT)
+                        # No, then is an up unicode arrow?
+                        elif ord(chars[char_idx]) == 0x2191: # ↑
+                            simulate_key_stroke(ui, ecodes.KEY_UP)
+                        # No, then is a right unicode arrow?
+                        elif ord(chars[char_idx]) == 0x2192: # →
+                            simulate_key_stroke(ui, ecodes.KEY_RIGHT)
+                        # No, then is a down unicode arrow?
+                        elif ord(chars[char_idx]) == 0x2193: # ↓
+                            simulate_key_stroke(ui, ecodes.KEY_DOWN)
+                        # No, then is a left to bar unicode arrow?
+                        elif ord(chars[char_idx]) == 0x21e4: # ⇤
+                            simulate_key_stroke(ui, ecodes.KEY_HOME)
+                        # No, then is a right to bar unicode arrow?
+                        elif ord(chars[char_idx]) == 0x21e5: # ⇥
+                            simulate_key_stroke(ui, ecodes.KEY_END)
+                        # No, then is a leftwards double unicode arrow?
+                        elif ord(chars[char_idx]) == 0x21D0: # ⇐
                             simulate_key_press(ui, ecodes.KEY_LEFTSHIFT)
-                            simulate_key_press(ui, ecodes.KEY_U)
-                            simulate_key_release(ui, ecodes.KEY_U)
+                            simulate_key_stroke(ui, ecodes.KEY_LEFT)
                             simulate_key_release(ui, ecodes.KEY_LEFTSHIFT)
-                            simulate_key_release(ui, ecodes.KEY_LEFTCTRL)
+                        # No, then is a upwards double unicode arrow?
+                        elif ord(chars[char_idx]) == 0x21D1: # ⇑
+                            simulate_key_press(ui, ecodes.KEY_LEFTSHIFT)
+                            simulate_key_stroke(ui, ecodes.KEY_UP)
+                            simulate_key_release(ui, ecodes.KEY_LEFTSHIFT)
+                        # No, then is a rightwards double unicode arrow?
+                        elif ord(chars[char_idx]) == 0x21D2: # ⇒
+                            simulate_key_press(ui, ecodes.KEY_LEFTSHIFT)
+                            simulate_key_stroke(ui, ecodes.KEY_RIGHT)
+                            simulate_key_release(ui, ecodes.KEY_LEFTSHIFT)
+                        # No, then is a downwards double unicode arrow?
+                        elif ord(chars[char_idx]) == 0x21D3: # ⇓
+                            simulate_key_press(ui, ecodes.KEY_LEFTSHIFT)
+                            simulate_key_stroke(ui, ecodes.KEY_DOWN)
+                            simulate_key_release(ui, ecodes.KEY_LEFTSHIFT)
+                        # No, then lets just enter the unicode char using the virtual keyboard
+                        else:
+                            simulate_unicode_input(ui, chars[char_idx])
 
-                            # Write each hex digit
-                            for hex_digit in '%X' % ord(chars[char_idx]):
-                                keycode = getattr(ecodes, 'KEY_%s' % hex_digit)
-                                simulate_key_press(ui, keycode)
-                                simulate_key_release(ui, keycode)
-
-                            # Press Enter
-                            simulate_key_press(ui, ecodes.KEY_ENTER)
-                            simulate_key_release(ui, ecodes.KEY_ENTER)
-
-                        # Increment counter
-                        char_idx += 1
+                        char_idx += 1 # increment counter
                     else:
                         continue # ignore key releases
                 else:
                     simulate_key(ui, event.code, event.value) # forward any other key events
             else:
-                # Passthrough OTHER type of events (e.g. SYNs)
+                # Forward OTHER type of events (e.g. SYNs)
                 ui.write(event.type, event.code, event.value)
                 ui.syn()
