@@ -164,44 +164,45 @@ to find the device path of your keyboard and pass it to the `keyboard` option wh
                             simulate_key_press(ui, ecodes.KEY_LEFTSHIFT)
                             simulate_key_stroke(ui, remapped_code)
                             simulate_key_release(ui, ecodes.KEY_LEFTSHIFT)
-                        # No, then it must be a unicode char. Is it a left unicode arrow?
+                        # No, then it must be a Unicode char. Is it some sort of unicode arrow?
                         elif ord(chars[char_idx]) == 0x2190: # ←
                             simulate_key_stroke(ui, ecodes.KEY_LEFT)
-                        # No, then is an up unicode arrow?
                         elif ord(chars[char_idx]) == 0x2191: # ↑
                             simulate_key_stroke(ui, ecodes.KEY_UP)
-                        # No, then is a right unicode arrow?
                         elif ord(chars[char_idx]) == 0x2192: # →
                             simulate_key_stroke(ui, ecodes.KEY_RIGHT)
-                        # No, then is a down unicode arrow?
                         elif ord(chars[char_idx]) == 0x2193: # ↓
                             simulate_key_stroke(ui, ecodes.KEY_DOWN)
-                        # No, then is a left to bar unicode arrow?
-                        elif ord(chars[char_idx]) == 0x21e4: # ⇤
+                        elif ord(chars[char_idx]) == 0x21F1: # ⇱
                             simulate_key_stroke(ui, ecodes.KEY_HOME)
-                        # No, then is a right to bar unicode arrow?
-                        elif ord(chars[char_idx]) == 0x21e5: # ⇥
+                        elif ord(chars[char_idx]) == 0x21F2: # ⇲
                             simulate_key_stroke(ui, ecodes.KEY_END)
-                        # No, then is a leftwards double unicode arrow?
                         elif ord(chars[char_idx]) == 0x21D0: # ⇐
                             simulate_key_press(ui, ecodes.KEY_LEFTSHIFT)
                             simulate_key_stroke(ui, ecodes.KEY_LEFT)
                             simulate_key_release(ui, ecodes.KEY_LEFTSHIFT)
-                        # No, then is a upwards double unicode arrow?
                         elif ord(chars[char_idx]) == 0x21D1: # ⇑
                             simulate_key_press(ui, ecodes.KEY_LEFTSHIFT)
                             simulate_key_stroke(ui, ecodes.KEY_UP)
                             simulate_key_release(ui, ecodes.KEY_LEFTSHIFT)
-                        # No, then is a rightwards double unicode arrow?
                         elif ord(chars[char_idx]) == 0x21D2: # ⇒
                             simulate_key_press(ui, ecodes.KEY_LEFTSHIFT)
                             simulate_key_stroke(ui, ecodes.KEY_RIGHT)
                             simulate_key_release(ui, ecodes.KEY_LEFTSHIFT)
-                        # No, then is a downwards double unicode arrow?
                         elif ord(chars[char_idx]) == 0x21D3: # ⇓
                             simulate_key_press(ui, ecodes.KEY_LEFTSHIFT)
                             simulate_key_stroke(ui, ecodes.KEY_DOWN)
                             simulate_key_release(ui, ecodes.KEY_LEFTSHIFT)
+                        elif ord(chars[char_idx]) == 0x21e4: # ⇤
+                            simulate_key_press(ui, ecodes.KEY_LEFTCTRL)
+                            simulate_key_press(ui, ecodes.KEY_LEFTSHIFT)
+                            simulate_key_stroke(ui, ecodes.KEY_I)
+                            simulate_key_release(ui, ecodes.KEY_LEFTSHIFT)
+                            simulate_key_release(ui, ecodes.KEY_LEFTCTRL)
+                        elif ord(chars[char_idx]) == 0x21e5: # ⇥
+                            simulate_key_press(ui, ecodes.KEY_LEFTCTRL)
+                            simulate_key_stroke(ui, ecodes.KEY_I)
+                            simulate_key_release(ui, ecodes.KEY_LEFTCTRL)
                         # No, then lets just enter the unicode char using the virtual keyboard
                         else:
                             simulate_unicode_input(ui, chars[char_idx])
