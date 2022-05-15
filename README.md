@@ -3,7 +3,7 @@
 onthefly
 ========
 
-*onthefly* allows you to emulate typing the contents of an input file by wildly pressing the *asdf jkl;* keys on your keyboard.
+*onthefly* allows you to emulate typing the contents of an input file by wildly pressing the <kbd>a</kbd><kbd>s</kbd><kbd>d</kbd><kbd>f</kbd><kbd>j</kbd><kbd>k</kbd><kbd>l</kbd><kbd>;</kbd> keys on your keyboard.
 
 Great for live coding presentations.
 
@@ -22,17 +22,17 @@ Installation
 
 Install and update using pip:
 
-```
-$ sudo python -m pip install onthefly
+```bash
+> sudo python -m pip install onthefly
 ```
 
 Usage
 -----
 
-Identify your keyboard's device path with the command line tool `evemu-record`:
+Identify your keyboard's device path with the command line tool `evtest`:
 
-```
-> sudo evemu-record
+```bash
+> sudo evtest
 
 ID  Device               Name                                 ...
 ------------------------------------------------------------- ...
@@ -52,21 +52,22 @@ ID  Device               Name                                 ...
 
 From this output, we see that my keyboard (a Logitech K330) has the device path `/dev/input/event7`.
 
-Pass the device path of your keyboard as an argument to the `--keyboard` option when invoking onthefly for the first time.
+Pass your keyboard's *device path* as an argument to the `--keyboard` option when invoking *onthefly* for the first time.
 
-```
-   $ onthefly --keyboard="/dev/input/event7" /path/to/file
+```bash
+> onthefly --keyboard="/dev/input/event7" /path/to/file
 ```
 
 Note that *onthefly* prompts for the root password in order to have access to the keyboard events.
 
-The keyboard name is remembered so you do not have to re-enter it in future invocations:
+The keyboard's device path is remembered so you do not have to re-enter it in future invocations:
 
-```
-   $ onthefly /path/to/file
+```bash
+> onthefly /path/to/file
 ```
 
-Type the `Pause/Break` key to quit the program at any moment. Use the `Backspace` key to erase characters without going out of sync with the input file.
+Type the `Pause/Break` key to quit the program at any moment.
+Use the `Backspace` key to erase characters without going out of sync with the input file.
 
 License
 -------
