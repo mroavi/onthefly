@@ -133,8 +133,8 @@ to find the device path of your keyboard and pass it to the `keyboard` option wh
 
                 ak = dev.active_keys() # get the active keys (keys that are being pressed down)
 
-                # Exit on pressing PAUSE or when all chars have been written.
-                if (event.code == ecodes.KEY_PAUSE) or (char_idx == len(chars)):
+                # Exit on pressing F9 or when all chars have been written.
+                if (event.code == ecodes.KEY_F9) or (char_idx == len(chars)):
                     dev.ungrab() # release the keybaord device so that other applications can receive events
                     break
 

@@ -66,8 +66,8 @@ The keyboard's device path is remembered so you do not have to re-enter it in fu
 > onthefly /path/to/file
 ```
 
-Type the `Pause/Break` key to quit the program at any moment.
-Use the `Backspace` key to erase characters without going out of sync with the input file.
+Type the <kbd>F9</kbd> key to quit the program at any moment.
+Use the <kbd>Backspace</kbd> key to erase characters without going out of sync with the input file.
 
 License
 -------
