@@ -166,7 +166,7 @@ to find the device path of your keyboard and pass it to the `keyboard` option wh
                             simulate_key_release(ui, ecodes.KEY_LEFTSHIFT)
                         # No, then it must be a Unicode char. Have I mapped this Unicode char to custom behavior?
                         elif ord(chars[char_idx]) == 0x2408: # ␈
-                            simulate_key_stroke(ui, ecodes.BACKSPACE)
+                            simulate_key_stroke(ui, ecodes.KEY_BACKSPACE)
                         elif ord(chars[char_idx]) == 0x2190: # ←
                             simulate_key_stroke(ui, ecodes.KEY_LEFT)
                         elif ord(chars[char_idx]) == 0x2191: # ↑
