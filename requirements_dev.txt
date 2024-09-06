@@ -1,4 +1,6 @@
 alabaster==0.7.16
+appdirs==1.4.4
+attrs==24.2.0
 babel==2.16.0
 bump2version==0.5.11
 certifi==2024.8.30
@@ -7,15 +9,19 @@ Click==7.0
 coverage==4.5.4
 distlib==0.3.8
 docutils==0.21.2
+elevate==0.1.3
 entrypoints==0.3
+evdev==1.7.1
 filelock==3.15.4
 flake8==3.7.8
 idna==3.8
 imagesize==1.4.1
+iniconfig==2.0.0
 Jinja2==3.1.4
 MarkupSafe==2.1.5
 mccabe==0.6.1
 nh3==0.2.18
+-e git+ssh://git@github.com/mroavi/onthefly.git@831cdad01e9b9c93893a5f38030e54b1b097fdf3#egg=onthefly
 packaging==24.1
 pkginfo==1.11.1
 platformdirs==4.2.2
@@ -24,6 +30,7 @@ py==1.11.0
 pycodestyle==2.5.0
 pyflakes==2.1.1
 Pygments==2.18.0
+pytest==7.2.0
 readme_renderer==44.0
 requests==2.32.3
 requests-toolbelt==1.0.0
