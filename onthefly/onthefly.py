@@ -144,7 +144,7 @@ to find the device path of your keyboard and pass it to the `keyboard` option wh
 
                 elif event.code == ecodes.KEY_BACKSPACE:
                     # Simulate a backspace only on key presses
-                    if event.value == 1: 
+                    if event.value == 1:
                         char_idx -= 1 # decrement counter
                         simulate_key_stroke(ui, ecodes.KEY_BACKSPACE)
                     else:
@@ -153,7 +153,7 @@ to find the device path of your keyboard and pass it to the `keyboard` option wh
                 # Simulate press/release of next char if the key is inside of the WRITE_NEXT_CHAR_KEYS set
                 elif event.code in WRITE_NEXT_CHAR_KEYS:
                     # Simulate next char only on key presses
-                    if event.value == 1: 
+                    if event.value == 1:
                         # Is the current char in the "no-shift" ascii table?
                         if chars[char_idx] in ascii2keycode:
                             remapped_code = ascii2keycode.get(chars[char_idx])
