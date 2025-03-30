@@ -66,17 +66,14 @@ def read_config_keyboard_device_path(filepath):
 
 def simulate_key(ui, code, keystate):
     ui.write(ecodes.EV_KEY, code, keystate)
-    time.sleep(0.005) # TEMP: fixes bug (see: https://github.com/gvalkov/python-evdev/issues/209)
     ui.syn()
 
 def simulate_key_press(ui, code):
     ui.write(ecodes.EV_KEY, code, 1)
-    time.sleep(0.005) # TEMP: fixes bug (see: https://github.com/gvalkov/python-evdev/issues/209)
     ui.syn()
 
 def simulate_key_release(ui, code):
     ui.write(ecodes.EV_KEY, code, 0)
-    time.sleep(0.005) # TEMP: fixes bug (see: https://github.com/gvalkov/python-evdev/issues/209)
     ui.syn()
 
 def simulate_key_stroke(ui, code):
