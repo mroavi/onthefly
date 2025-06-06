@@ -8,7 +8,7 @@ cffi==1.17.1
 charset-normalizer==3.3.2
 Click==7.0
 coverage==4.5.4
-cryptography==43.0.1
+cryptography==44.0.1
 distlib==0.3.8
 docutils==0.21.2
 elevate==0.1.3
