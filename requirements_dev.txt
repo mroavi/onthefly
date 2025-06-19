@@ -59,7 +59,7 @@ toml==0.10.2
 tox==3.14.0
 tqdm==4.66.5
 twine==5.1.1
-urllib3==2.2.2
+urllib3==2.5.0
 virtualenv==20.26.6
 watchdog==5.0.2
 wheel==0.38.1
