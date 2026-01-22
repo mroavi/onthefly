@@ -62,5 +62,5 @@ twine==5.1.1
 urllib3==2.6.3
 virtualenv==20.36.1
 watchdog==5.0.2
-wheel==0.38.1
+wheel==0.46.2
 zipp==3.20.1
